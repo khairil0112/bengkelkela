@@ -35,7 +35,7 @@ class PembelianController extends Controller
         }
 
         $pembelian = $query->get();
-        dd($pembelian);
+        // dd($pembelian);
         return view('pembelian.index', compact('pembelian'));
     }
 
