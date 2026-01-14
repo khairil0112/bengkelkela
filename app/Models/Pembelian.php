@@ -41,4 +41,6 @@ class Pembelian extends Model
     {
         return $this->belongsTo(Pemasok::class, 'idpemasok', 'idpemasok');
     }
+
+    // hello kelaa
 }

@@ -15,6 +15,7 @@ class PembelianController extends Controller
     {
         $query = Pembelian::with('pemasok')->orderBy('id_pembelian', 'desc');
 
+        // dd($query);
         if ($request->filled('from')) {
             $query->where('tanggal_pembelian', '>=', $request->from);
         }
@@ -34,6 +35,7 @@ class PembelianController extends Controller
         }
 
         $pembelian = $query->get();
+        dd($pembelian);
         return view('pembelian.index', compact('pembelian'));
     }
 
