@@ -159,4 +159,14 @@ class PembelianController extends Controller
         return redirect()->route('pembelian.index')
             ->with('success', 'Data berhasil dihapus');
     }
+    public function cetak($id)
+{
+    $pembelian = Pembelian::with([
+        'pemasok',
+        'details.part'
+    ])->where('id_pembelian', $id)->firstOrFail();
+
+    return view('pembelian.cetak', compact('pembelian'));
+}
+
 }

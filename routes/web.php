@@ -9,6 +9,7 @@ use App\Http\Controllers\MekanikController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\StokController;
 
 
 Route::get('/', function () {
@@ -100,7 +101,9 @@ Route::post('/pembelian/detail/{id}', function ($id) {
     $transaksi = \App\Models\Pembelian::with(['pelanggan', 'mekanik', 'detail.part'])->findOrFail($id);
     return view('pembelian.detail', compact('transaksi'));
 });
-Route::get(
-    'pembelian/cetak/{id}',
-    [App\Http\Controllers\PembelianController::class, 'cetak']
-)->name('pembelian.cetak');
+Route::get('/pembelian/cetak/{id}', [PembelianController::class, 'cetak'])
+    ->name('pembelian.cetak');
+
+Route::get('/stok', [StokController::class, 'index'])->name('stok.index');
+Route::post('/stok', [StokController::class, 'index'])->name('stok.index');
+Route::post('/stok/kartu', [StokController::class, 'kartu'])->name('stok.kartu');

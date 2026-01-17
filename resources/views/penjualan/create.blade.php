@@ -58,6 +58,11 @@
             <label>No. Polisi</label>
             <input type="text" class="form-control" name="nopol" id="nopol" readonly>
         </div>
+
+        <div class="col-md-6 mb-3">
+                <label>Keterangan</label>
+                <input type="text" name="keterangan" class="form-control">
+            </div>
     </div>
 
     <!-- ===================== DETAIL ===================== -->

@@ -447,6 +447,12 @@
                     </button>
 
                 </form>
+                <form action="{{ url('stok') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn-link {{ Request::is('stok') ? 'active' : '' }}">
+                        ❤️ kartu stok
+                    </button>
+                </form>
             </div>
         </div>
 

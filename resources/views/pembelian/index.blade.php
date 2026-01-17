@@ -92,7 +92,7 @@
                         </td>
                         <td class="text-center">
                             <a href="{{ route('pembelian.cetak', $row->id_pembelian) }}"
-                               class="btn btn-sm btn-info mb-1">
+                               class="btn btn-sm btn-info mb-1" target="_blank">
                                 Cetak Nota
                             </a>
 

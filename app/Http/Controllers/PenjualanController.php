@@ -59,6 +59,7 @@ class PenjualanController extends Controller
             'tanggal'      => $request->tanggal,
             'pelanggan_id' => $request->pelanggan_id,
             'mekanik_id'   => $request->mekanik_id,
+            'keterangan'   => $request->keterangan,
             'kendaraan'    => $request->namamotor . ' - ' . $request->nopol,
         ]);
 
@@ -119,6 +120,7 @@ class PenjualanController extends Controller
             'tanggal'      => $request->tanggal,
             'pelanggan_id' => $request->pelanggan_id,
             'mekanik_id'   => $request->mekanik_id,
+            'keterangan'   => $request->keterangan,
             'kendaraan'    => $request->namamotor . ' - ' . $request->nopol,
         ]);
 

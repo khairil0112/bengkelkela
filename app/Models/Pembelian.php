@@ -29,7 +29,7 @@ class Pembelian extends Model
     {
         return $this->hasMany(
             Detail_transaksi::class,
-            'id_transaksi',
+            'transaksi_id',
             'id_pembelian'
         );
     }
