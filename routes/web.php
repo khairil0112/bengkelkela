@@ -90,7 +90,18 @@ Route::get(
     [LaporanController::class, 'print']
 )->name('laporan.penjualan.print');
 
-Route::post('/pembelian', [PembelianController::class, 'index'])->name('pembelian.index');
+
+
+Route::get('/pembelian', [PembelianController::class, 'index'])
+    ->name('pembelian.index');
+Route::post('/pembelian', [PembelianController::class, 'index'])
+    ->name('pembelian.index');
+
+// GET khusus untuk redirect awal
+Route::get('/pembelian/view', function () {
+    return view('pembelian.redirect');
+});
+
 Route::get('/pembelian/create', [PembelianController::class, 'create'])->name('pembelian.create');
 Route::post('/pembelian/store', [PembelianController::class, 'store'])->name('pembelian.store');
 Route::get('/pembelian/show/{id}', [PembelianController::class, 'show'])->name('pembelian.show');

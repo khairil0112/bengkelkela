@@ -238,16 +238,21 @@ class PembelianController extends Controller
         return view('pembelian.show', compact('pembelian'));
     }
 
-    public function destroy(Pembelian $pembelian, $id)
+    public function destroy($id)
     {
-        $pembelian = Pembelian::findOrfail('id_pembelian');
-        pembelian::where('id_pembelian', $id)->delete();
-        // Pembelian::where('id_pembelian', $id)->delete();
+        $pembelian = Pembelian::where('id_pembelian', $id)->firstOrFail();
+
+        // Hapus detail dulu jika ada
+        Detail_transaksi::where('transaksi_id', $pembelian->id_pembelian)->delete();
+
+        // Hapus master
         $pembelian->delete();
 
-        // dd($pembelian);
-        return redirect()->route('pelanggan.index')->with('success', 'Data Berhasil dihapus.');
+        // ⚠️ JANGAN pakai route(), karena index POST
+        return redirect('/pembelian')
+            ->with('success', 'Data berhasil dihapus');
     }
+
     public function cetak($id)
     {
         $pembelian = Pembelian::with([
