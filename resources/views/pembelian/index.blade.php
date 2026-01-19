@@ -107,7 +107,7 @@
                             </a>
 
                             <form action="{{ route('pembelian.destroy', $row->id_pembelian) }}"
-                                  method="POST"
+                                  method="Post"
                                   class="d-inline"
                                   onsubmit="return confirm('Hapus data ini?')">
                                 @csrf

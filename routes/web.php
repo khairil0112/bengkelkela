@@ -95,8 +95,8 @@ Route::get('/pembelian/create', [PembelianController::class, 'create'])->name('p
 Route::post('/pembelian/store', [PembelianController::class, 'store'])->name('pembelian.store');
 Route::get('/pembelian/show/{id}', [PembelianController::class, 'show'])->name('pembelian.show');
 Route::get('/pembelian/edit/{id}', [PembelianController::class, 'edit'])->name('pembelian.edit');
-Route::post('pembelian/update/{id}', [PembelianController::class, 'update']);
-Route::post('/pembelian/destroy/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
+Route::post('pembelian/update/{id}', [PembelianController::class, 'update'])->name('pembelian.update');
+Route::delete('/pembelian/destroy/{id}', [PembelianController::class, 'destroy'])->name('pembelian.destroy');
 Route::post('/pembelian/detail/{id}', function ($id) {
     $transaksi = \App\Models\Pembelian::with(['pelanggan', 'mekanik', 'detail.part'])->findOrFail($id);
     return view('pembelian.detail', compact('transaksi'));

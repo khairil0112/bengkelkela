@@ -7,9 +7,10 @@
 
         <h2 class="mt-4">Detail Pembelian</h2>
 
-        <a href="{{ route('pembelian.index') }}" class="btn btn-secondary mb-3">
-            &larr; Kembali
-        </a>
+        <form action="{{ route('pembelian.index') }}" method="post">
+            @csrf
+            <button type="submit" class="btn btn-secondary mb-3">← Kembali</button>
+        </form>
 
         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-dark text-white">

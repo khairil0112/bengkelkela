@@ -143,6 +143,92 @@ class PembelianController extends Controller
         // }
     }
 
+    public function edit($id)
+    {
+        $pembelian = Pembelian::findOrFail($id);
+        $pemasok = Pemasok::all();
+        $part = Partdanjasa::all();
+        $pembelian->load('details');
+        return view('pembelian.edit', compact('pembelian', 'pemasok', 'part'));
+    }
+    public function update(Request $request, Pembelian $pembelian)
+    {
+        // ================= VALIDASI =================
+        $request->validate([
+            'kode_pembelian' => 'required',
+            'tanggal_pembelian' => 'required|date',
+            'idpemasok' => 'required',
+            'part_id' => 'required|array|min:1',
+            'part_id.*' => 'required|exists:partdanjasa,id',
+            'qty' => 'required|array',
+            'qty.*' => 'required|integer|min:1',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // ================= UPDATE PEMBELIAN (MASTER) =================
+            $pembelian->update([
+                'kode_pembelian' => $request->kode_pembelian,
+                'tanggal_pembelian' => $request->tanggal_pembelian,
+                'idpemasok' => $request->idpemasok,
+                'keterangan' => $request->keterangan,
+                'total_harga' => 0,
+                'diskon' => 0,
+                'pajak' => 0,
+                'grand_total' => 0,
+            ]);
+
+            // ================= ADJUST STOCK FOR OLD DETAILS =================
+            $oldDetails = $pembelian->details;
+            foreach ($oldDetails as $detail) {
+                $part = Partdanjasa::find($detail->partjasa_id);
+                $part->decrement('stokawal', $detail->qty);
+            }
+
+            // ================= DELETE OLD DETAILS =================
+            Detail_transaksi::where('transaksi_id', $pembelian->id_pembelian)->delete();
+
+            $total = 0;
+
+            // ================= SIMPAN DETAIL BARU =================
+            foreach ($request->part_id as $index => $partId) {
+                $qty = (int) $request->qty[$index];
+
+                $part = Partdanjasa::findOrFail($partId);
+
+                $harga = $part->hbterakhir;
+                $subtotal = $qty * $harga;
+
+                Detail_transaksi::create([
+                    'transaksi_id' => $pembelian->id_pembelian,
+                    'partjasa_id' => $partId,
+                    'qty' => $qty,
+                    'harga' => $harga,
+                    'subtotal' => $subtotal,
+                ]);
+
+                $total += $subtotal;
+
+                $part->increment('stokawal', $qty);
+            }
+
+            // ================= UPDATE TOTAL =================
+            $pembelian->update([
+                'total_harga' => $total,
+                'grand_total' => $total,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('pembelian.index')
+                ->with('success', 'Data pembelian berhasil diupdate');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors($e->getMessage());
+        }
+    }
     public function show($id)
     {
         $pembelian = Pembelian::with('details.part')
@@ -152,21 +238,23 @@ class PembelianController extends Controller
         return view('pembelian.show', compact('pembelian'));
     }
 
-    public function destroy($id)
+    public function destroy(Pembelian $pembelian, $id)
     {
-        Pembelian::where('id_pembelian', $id)->delete();
+        $pembelian = Pembelian::findOrfail('id_pembelian');
+        pembelian::where('id_pembelian', $id)->delete();
+        // Pembelian::where('id_pembelian', $id)->delete();
+        $pembelian->delete();
 
-        return redirect()->route('pembelian.index')
-            ->with('success', 'Data berhasil dihapus');
+        // dd($pembelian);
+        return redirect()->route('pelanggan.index')->with('success', 'Data Berhasil dihapus.');
     }
     public function cetak($id)
-{
-    $pembelian = Pembelian::with([
-        'pemasok',
-        'details.part'
-    ])->where('id_pembelian', $id)->firstOrFail();
+    {
+        $pembelian = Pembelian::with([
+            'pemasok',
+            'details.part'
+        ])->where('id_pembelian', $id)->firstOrFail();
 
-    return view('pembelian.cetak', compact('pembelian'));
-}
-
+        return view('pembelian.cetak', compact('pembelian'));
+    }
 }

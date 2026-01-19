@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="{{ route('pembelian.index') }}" class="btn btn-secondary mb-3">← Kembali</a>
+    <form action="{{ route('pembelian.index') }}" method="post">
+        @csrf
+        <button type="submit" class="btn btn-secondary mb-3">← Kembali</button>
+    </form>
 
     <h3><b>Form Tambah Pembelian</b></h3>
 
